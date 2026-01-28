@@ -14,5 +14,9 @@ app.post('/notes',(req,res)=>{
 app.get('/notes',(req,res)=>{
   res.send(notes)
 })
+app.delete("/notes/:index",(req,res)=>{
+  res.send("note deleted")
+  delete notes[req.params.index];
+})
 
 module.exports=app;
