@@ -2,6 +2,7 @@ import AllEmployeeCard from "./AllEmployeeCard";
 import useAllEmployee from "../utils/useAllEmployee";
 
 const Body = () => {
+    
   const data = useAllEmployee();
 
   if (data === null) {
@@ -9,7 +10,7 @@ const Body = () => {
   }
 
   return (
-    <div>
+    <div className="appbody">
       {data.map((item) => (
         <AllEmployeeCard
           key={item._id}

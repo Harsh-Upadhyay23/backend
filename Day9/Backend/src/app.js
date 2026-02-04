@@ -4,6 +4,7 @@ const employeeModel = require('./models/employee.model.js')
 const cors = require('cors')
 
 app.use(express.json())
+app.use(express.static("./public"))
 app.use(cors())
 
 app.post('/api/employee', async (req, res) => {
@@ -16,6 +17,10 @@ app.post('/api/employee', async (req, res) => {
 
 app.get('/api/employee', async (req, res) => {
   const data = await employeeModel.find()
+  res.status(200).json({ data })
+})
+app.get('/api/employee/:id', async (req, res) => {
+  const data = await employeeModel.findById(req.params.id);
   res.status(200).json({ data })
 })
 

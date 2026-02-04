@@ -27,12 +27,24 @@ body {
   font-size: 20px;
 }
 
-.navbar div {
+.navbar ul {
   display: flex;
   gap: 10px;
 }
+.navbar .addemployee  {
+  font-size: 20px;
+  border: solid red 2px;
+  padding: 5px;
+  border-radius: 20px;
+  text-decoration: none;
+  color: white;
+}
+.navbar .addemployee:hover  {
+ background-color: rgb(74, 74, 73);
+ color: black;
+}
 
-.navbar div li {
+.navbar ul li {
   list-style: none;
 }
 
@@ -62,4 +74,10 @@ body {
   width: 50px;
   border-radius: 50%;
 
+}
+.appbody{
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  margin-top: 20px;
 }
