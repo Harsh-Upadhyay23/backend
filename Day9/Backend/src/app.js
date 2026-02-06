@@ -22,6 +22,7 @@ app.get('/api/employee', async (req, res) => {
 app.get('/api/employee/:id', async (req, res) => {
   const data = await employeeModel.findById(req.params.id);
   res.status(200).json({ data })
+ 
 })
 
 app.patch('/api/employee/:id', async (req, res) => {
