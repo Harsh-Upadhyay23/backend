@@ -34,4 +34,48 @@ authRouter.post('/register',async(req,res)=>{
    })
 })
 
+authRouter.post('/login',async(req,res)=>{
+
+ const { email, password, username } = req.body;
+
+const user = await userModel.findOne({
+  $or: [
+    { email: email },
+    { username: username }
+  ]
+});
+
+if(!user){
+   return res.status(404).json({
+      message:"user not found"
+   })
+}
+
+const hash=crypto.createHash('sha256').update(password).digest('hex')
+
+const isPasswordValid= hash==user.password
+
+if(!isPasswordValid){
+   return res.status(401).json({
+      message:"password incorrect"
+   })
+}
+ const token=jwt.sign({
+   user:user._id
+ },process.env.JWT_SECRET,{expiresIn:"1d"})
+
+ res.cookie('token',token)
+ res.status(201).json({
+   message:"user logged in",
+   user:{
+      username:user.name,
+      email:user.email,
+      bio:user.bio,
+      profileImage:user.profileImage
+   }
+ 
+ })
+
+})
+
 module.exports=authRouter;
