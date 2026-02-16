@@ -1,0 +1,271 @@
+\documentclass[12pt,a4paper]{report}
+
+% Packages
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{xcolor}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{titlesec}
+
+% Geometry
+\geometry{
+ a4paper,
+ total={170mm,257mm},
+ left=20mm,
+ top=20mm,
+}
+
+% Code Listing Style
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+
+% Title Format
+\titleformat{\chapter}[display]
+  {\normalfont\bfseries}{}{0pt}{\Huge}
+
+% Document Info
+\title{\textbf{Social Media Backend Application Documentation}}
+\author{Harsh Upadhyay}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\chapter{Introduction}
+\section{Overview}
+This document details the architecture, design, and implementation of a robust backend system for a social media application. The application is built using a modern technology stack centered around Node.js and MongoDB, providing a scalable and efficient platform for users to share content and interact.
+
+\section{Purpose}
+The primary purpose of this application is to facilitate user interaction through post sharing. Key features include:
+\begin{itemize}
+    \item Secure user authentication (Registration \& Login).
+    \item Image uploading and hosting.
+    \item Post creation with captions.
+    \item Browsing user feeds.
+    \item Follow/Unfollow mechanism (Data model provided).
+\end{itemize}
+
+\chapter{System Architecture}
+\section{Architectural Pattern}
+The application follows the **Model-View-Controller (MVC)** architectural pattern, which separates the application into three main logical components:
+\begin{itemize}
+    \item \textbf{Model:} Represents the data structure and business logic. It interacts directly with the database. In our case, these are the Mongoose schemas defining Users, Posts, and Follows.
+    \item \textbf{View:} Represents the visual interface. Since this is a backend API, the "View" is represented by the JSON responses sent to the client (React, Mobile App, etc.).
+    \item \textbf{Controller:} Acts as an intermediary between Model and View. It processes incoming requests, interacts with the Model to fetch or update data, and returns the appropriate response.
+\end{itemize}
+
+\section{Directory Structure}
+The project is organized as follows:
+\begin{verbatim}
+/src
+  |-- /config       # Configuration files (Database connection)
+  |-- /controllers  # Request handlers (Business Logic)
+  |-- /middlewares  # Express Middleware (Authentication)
+  |-- /models       # Mongoose Schemas (Data Models)
+  |-- /routes       # API Route definitions
+  |-- app.js        # Express App setup
+\end{verbatim}
+
+\chapter{Technologies and Tools}
+The following technologies were selected for this project:
+
+\section{Node.js}
+\textbf{What it is:} A JavaScript runtime built on Chrome's V8 JavaScript engine.
+\textbf{Why it is used:} It allows us to use JavaScript on the server-side, enabling a unified language for both frontend and backend. Its event-driven, non-blocking I/O model makes it lightweight and efficient for real-time applications.
+
+\section{Express.js}
+\textbf{What it is:} A minimal and flexible Node.js web application framework.
+\textbf{Why it is used:} It simplifies the process of building robust APIs by providing a thin layer of fundamental web application features, such as routing and middleware support, without obscuring Node.js features.
+
+\section{MongoDB \& Mongoose}
+\textbf{What it is:} MongoDB is a NoSQL database program, using JSON-like documents with optional schemas. Mongoose is an Object Data Modeling (ODM) library for MongoDB and Node.js.
+\textbf{Why it is used:} MongoDB's document model maps naturally to objects in application code, making it easy to work with. Mongoose provides a straightforward, schema-based solution to model application data, including built-in type casting, validation, and query building.
+
+\section{JSON Web Token (JWT)}
+\textbf{What it is:} An open standard (RFC 7519) that defines a compact and self-contained way for securely transmitting information between parties as a JSON object.
+\textbf{Why it is used:} Used for stateless authentication. Once a user logs in, the server generates a token signed with a secret key. The client sends this token with subsequent requests, allowing the server to verify the user's identity without querying a session store.
+
+\section{Bcrypt.js}
+\textbf{What it is:} A library to help you hash passwords.
+\textbf{Why it is used:} Security. Storing passwords in plain text is a critical vulnerability. Bcrypt hashes passwords with a salt, making them resistant to rainbow table attacks.
+
+\section{ImageKit}
+\textbf{What it is:} A cloud-based image management solution.
+\textbf{Why it is used:} To store and serve user-uploaded images efficiently. It handles image optimization and delivery via CDN, offloading heavy media handling from our main server.
+
+\chapter{Database Design}
+The database consists of three primary collections: Users, Posts, and Follows.
+
+\section{User Model}
+Stores user profile information and authentication credentials.
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Field} & \textbf{Type} & \textbf{Description} \\ \hline
+username & String & Unique identifier for the user. \\ \hline
+email & String & Unique email address. \\ \hline
+password & String & Hashed password string. \\ \hline
+bio & String & Short user biography. \\ \hline
+profileImage & String & URL to the profile picture. \\ \hline
+\end{tabular}
+\caption{User Schema}
+\end{table}
+
+\section{Post Model}
+Stores content created by users.
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Field} & \textbf{Type} & \textbf{Description} \\ \hline
+caption & String & Text accompanying the image. \\ \hline
+imgUrl & String & URL of the uploaded image (from ImageKit). \\ \hline
+user & ObjectId & Reference to the User who created the post. \\ \hline
+\end{tabular}
+\caption{Post Schema}
+\end{table}
+
+\section{Follow Model}
+Manages the many-to-many relationship between users (Followers/Following).
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Field} & \textbf{Type} & \textbf{Description} \\ \hline
+follower & ObjectId & Reference to the User who is following. \\ \hline
+followee & ObjectId & Reference to the User being followed. \\ \hline
+timestamps & Date & Creation/Update time. \\ \hline
+\end{tabular}
+\caption{Follow Schema}
+\end{table}
+
+\chapter{Implementation Details}
+This chapter explores key components of the implementation.
+
+\section{Authentication}
+Authentication is handled in `auth.controller.js`.
+\subsection{Registration}
+The registration process involves:
+1. Validating input.
+2. Checking if the user already exists.
+3. Hashing the password.
+4. Creating the user record.
+5. Generating a JWT token.
+
+\begin{lstlisting}[language=JavaScript, caption=User Registration Implementation]
+async function registerController(req, res) {
+    const { email, username, password, bio, profileImage } = req.body
+    
+    // Check if user exists
+    const isUserAlreadyExists = await userModel.findOne({
+        $or: [{ username }, { email }]
+    })
+    
+    if (isUserAlreadyExists) {
+        return res.status(409).json({ message: "User already exists" })
+    }
+    
+    // Hash password
+    const hash = await bcrypt.hash(password, 10)
+    
+    // Create User
+    const user = await userModel.create({
+        username, email, bio, profileImage, password: hash
+    })
+    
+    // Generate Token
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1d" })
+    
+    res.cookie("token", token)
+    res.status(201).json({ message: "User Registered successfully", user })
+}
+\end{lstlisting}
+
+\section{Middleware}
+Protected routes use the `identifyUser` middleware to verify the JWT token.
+\begin{lstlisting}[language=JavaScript, caption=Auth Middleware]
+async function identifyUser(req, res, next) {
+    const token = req.cookies.token
+    if (!token) return res.status(401).json({ message: "Token not provided" })
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET)
+        req.user = decoded // Attach user info to request
+        next()
+    } catch (err) {
+        return res.status(401).json({ message: "user not authorized" })
+    }
+}
+\end{lstlisting}
+
+\section{Post Management}
+Posts are created with image uploads. We use `multer` to handle the file in memory and then upload it to `ImageKit`.
+\begin{lstlisting}[language=JavaScript, caption=Creating a Post]
+async function createPostController(req, res) {
+    // Upload implementation details...
+    const file = await imagekit.files.upload({
+        file: await toFile(Buffer.from(req.file.buffer), 'file'), // handled by multer
+        fileName: "PostImage",
+    })
+
+    const post = await postModel.create({
+        caption: req.body.caption,
+        imgUrl: file.url,
+        user: req.user.id
+    })
+
+    res.status(201).json({ message: "Post created", post })
+}
+\end{lstlisting}
+
+\chapter{API Endpoints}
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|l|l|}
+\hline
+\textbf{Method} & \textbf{Endpoint} & \textbf{Protected} & \textbf{Description} \\ \hline
+POST & /api/auth/register & No & Register a new user. \\ \hline
+POST & /api/auth/login & No & Login existing user. \\ \hline
+POST & /api/posts & Yes & Create a new post (w/ image). \\ \hline
+GET & /api/posts & Yes & Get posts for current user. \\ \hline
+GET & /api/posts/details/:id & Yes & Get details of a specific post. \\ \hline
+\end{tabular}
+\caption{API Endpoints}
+\end{table}
+
+\chapter{Conclusion}
+This documentation has outlined the structure and implementation of the Social Media Backend Application. By leveraging Node.js, Express, and MongoDB, we have created a scalable foundation. The implementation of JWT authentication ensures security, while ImageKit integration manages media efficiently. The MVC architecture ensures code maintainability and separation of concerns.
+
+\end{document}
