@@ -2,6 +2,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: "Inter", sans-serif;
 }
 
 html,
@@ -12,72 +13,100 @@ body,
 }
 
 body {
-  background-color: rgb(19, 19, 19);
-  color: white;
+  background: #0f0f0f;
+  color: #f5f5f5;
 }
 
 .navbar {
-  margin: 5px;
-  padding: 0 5px;
+  margin: 15px 20px;
+  padding: 10px 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border: solid white 2px;
-  border-radius: 20px;
-  font-size: 20px;
+  background: #1a1a1a;
+  border-radius: 14px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
 }
 
 .navbar ul {
   display: flex;
-  gap: 10px;
-}
-.navbar .addemployee  {
-  font-size: 20px;
-  border: solid red 2px;
-  padding: 5px;
-  border-radius: 20px;
-  text-decoration: none;
-  color: white;
-}
-.navbar .addemployee:hover  {
- background-color: rgb(74, 74, 73);
- color: black;
+  gap: 20px;
+  align-items: center;
 }
 
 .navbar ul li {
   list-style: none;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.navbar ul li:hover {
+  color: #4da6ff;
+}
+
+.navbar .addemployee {
+  padding: 8px 18px;
+  border-radius: 30px;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 500;
+  background: linear-gradient(135deg, #4da6ff, #0066ff);
+  color: white;
+  transition: 0.3s ease;
+}
+
+.navbar .addemployee:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(77, 166, 255, 0.4);
 }
 
 .navbar div img {
-  height: 50px;
-  width: 50px;
+  height: 45px;
+  width: 45px;
   border-radius: 50%;
   object-fit: cover;
+  border: 2px solid #4da6ff;
+}
 
+.appbody {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 0 20px;
+  margin-top: 30px;
 }
 
 .allemployeecard {
   display: flex;
-  gap: 10px;
   align-items: center;
-  background-color: blue;
-  width: fit-content;
-  border-radius: 20px;
-  margin: 5px;
-  padding: 5px;
+  gap: 15px;
+  padding: 12px 18px;
+  border-radius: 14px;
+  background: #1c1c1c;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  transition: 0.3s ease;
+  cursor: pointer;
+}
 
-
+.allemployeecard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.8);
 }
 
 .allemployeecard img {
-  height: 50px;
-  width: 50px;
+  height: 55px;
+  width: 55px;
   border-radius: 50%;
-
+  object-fit: cover;
+  border: 2px solid #4da6ff;
 }
-.appbody{
-  display: flex;
-  gap: 5px;
-  flex-wrap: wrap;
-  margin-top: 20px;
+
+.allemployeecard h3 {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.allemployeecard p {
+  font-size: 13px;
+  color: #aaa;
 }
