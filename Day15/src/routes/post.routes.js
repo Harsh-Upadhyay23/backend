@@ -1,7 +1,10 @@
 const express=require('express')
 const postController=require('../controllers/post.controller')
 const postRouter=express.Router();
+const multer=require('multer');
 
-postRouter.post('/creatpost',postController.createPostController)
+const upload=multer({storage:multer.memoryStorage()})
+
+postRouter.post('/creatpost',upload.single('image'),postController.createPostController)
 
 module.exports=postRouter
