@@ -1,16 +1,34 @@
 const express = require('express');
-const app=express();
-app.use(express.json)
 
-let students=[];
+const app = express();
+const PORT = 3000;
 
-app.get('/',(req,res)=>{
-    res.send("hello world")
-})
-app.post('/student',(req,res)=>{
-    students.push(req.body)
-})
-app.listen(3000,()=>{
-    console.log("server is runing on 3000");
-    
-})
+app.use(express.json());
+
+let students = [];
+
+app.get('/', (req, res) => {
+  res.status(200).send('Hello World');
+});
+
+app.post('/student', (req, res) => {
+  const student = req.body;
+
+  if (!student || Object.keys(student).length === 0) {
+    return res.status(400).json({ message: 'Student data is required' });
+  }
+
+  students.push(student);
+  res.status(201).json({
+    message: 'Student added successfully',
+    data: student
+  });
+});
+
+app.get('/students', (req, res) => {
+  res.status(200).json(students);
+});
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
