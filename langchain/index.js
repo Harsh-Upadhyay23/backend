@@ -22,6 +22,7 @@ async function chat() {
 
     try {
       const response = await model.invoke(input);
+
       // IMPORTANT: response.content use karo
       console.log("Bot:", response.content);
 
