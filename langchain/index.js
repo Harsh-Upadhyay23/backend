@@ -1,6 +1,7 @@
 import "dotenv/config";
 import readline from "readline";
 import { ChatMistralAI } from "@langchain/mistralai";
+import { HumanMessage, AIMessage } from "@langchain/core/messages";
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -9,28 +10,30 @@ const rl = readline.createInterface({
 
 const model = new ChatMistralAI({
   model: "mistral-small-latest",
-  temperature: 0,
 });
+
+// 🧠 memory
+const messages = [];
 
 async function chat() {
   rl.question("You: ", async (input) => {
-    if (input.toLowerCase() === "exit") {
-      console.log("Bot: Goodbye 👋");
+    if (input === "exit") {
       rl.close();
       return;
     }
 
-    try {
-      const response = await model.invoke(input);
+    // user message add
+    messages.push(new HumanMessage(input));
 
-      // IMPORTANT: response.content use karo
-      console.log("Bot:", response.content);
+    // AI call with full history
+    const res = await model.invoke(messages);
 
-    } catch (error) {
-      console.log("Error:", error.message);
-    }
+    // AI reply store
+    messages.push(new AIMessage(res.content));
 
-    chat(); // loop again
+    console.log("Bot:", res.content);
+
+    chat(); // repeat
   });
 }
 
