@@ -1,40 +1,59 @@
+// Load environment variables (API keys etc.)
 import "dotenv/config";
+
+// For taking input from terminal
 import readline from "readline";
+
+// LangChain model & message types
 import { ChatMistralAI } from "@langchain/mistralai";
 import { HumanMessage, AIMessage } from "@langchain/core/messages";
 
+// Create interface for CLI chat
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
 });
 
+// Initialize AI model
 const model = new ChatMistralAI({
   model: "mistral-small-latest",
 });
 
-// 🧠 memory
+// 🧠 Memory to store conversation history
 const messages = [];
 
+// Main chat function
 async function chat() {
   rl.question("You: ", async (input) => {
-    if (input === "exit") {
+
+    // Exit condition
+    if (input.toLowerCase() === "exit") {
+      console.log("Chat ended.");
       rl.close();
       return;
     }
 
-    // user message add
-    messages.push(new HumanMessage(input));
+    try {
+      // 1️⃣ Store user message
+      messages.push(new HumanMessage(input));
 
-    // AI call with full history
-    const res = await model.invoke(messages);
+      // 2️⃣ Send full conversation to AI
+      const response = await model.invoke(messages);
 
-    // AI reply store
-    messages.push(new AIMessage(res.content));
+      // 3️⃣ Store AI response
+      messages.push(new AIMessage(response.content));
 
-    console.log("Bot:", res.content);
+      // 4️⃣ Print AI reply
+      console.log("Bot:", response.content);
 
-    chat(); // repeat
+    } catch (error) {
+      console.error("Error:", error.message);
+    }
+
+    // 5️⃣ Repeat chat
+    chat();
   });
 }
 
+// Start chat
 chat();
